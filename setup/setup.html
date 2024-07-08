@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Coming soon</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #ebe8e8;
+      margin: 0;
+    }
+    img {
+      width: 500px;
+      margin: 20px;
+    }
+    h1 {
+      color: #6c5ce7;
+    }
+    footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background-color: #f0f0f0;
+      padding: 10px;
+      text-align: center;
+      color: #666;
+    }
+
+    pre {
+    font-size: 18px;
+  }
+
+  .sidebar {
+      background-color: #737f8f;
+      width: 200px;
+      padding: 20px;
+      box-sizing: border-box;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      overflow-y: auto;
+  }
+
+  .sidebar-button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #506784;
+      color: #ffffff; /* Text color */
+      border: none;
+      text-align: left;
+      text-decoration: none;
+      font-size: 16px;
+  }
+
+  .content {
+      margin-left: 200px;
+      padding: 20px;
+      box-sizing: border-box;
+  }
+  </style>
+<script>
+  function loadPage(route) {
+    console.log("Navigating to: " + route);
+    window.location.href = "/" + route;
+    return false;
+  }
+</script>
+<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+</head>
+<body>
+  <div class="sidebar">
+    <button type="button" class="sidebar-button" onclick="loadPage('')">Home</button>
+    <button type="button" class="sidebar-button" onclick="loadPage('Server setup')">server-setup</button>
+    <button type="button" class="sidebar-button" onclick="loadPage('Client setup')">client-setup</button>
+    <button type="button" class="sidebar-button" onclick="loadPage('Useage')">useage</button>
+  </div>
+  <img src="purple_text_logo_NB.png" alt="purple_logo">
+  <h1>Documentation coming soon</h1>
+  <p>This will be the page for the setup docs</p>
+  <footer>
+    <p>Email me at sylus@sylus.dev if you find issues or want to suggest feature</p>
+  </footer>
+</body>
+</html>
