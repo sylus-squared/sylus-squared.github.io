@@ -5,8 +5,8 @@
   <style>
   body {
     font-family: Arial, sans-serif;
-    text-align: center;
     background-color: #ebe8e8;
+    padding-left: 210px;
     margin: 0;
   }
   img {
@@ -79,7 +79,23 @@
     <button type="button" class="sidebar-button" onclick="loadPage('useage')">Useage</button>
   </div>
   <img src="purple_text_logo_NB.png" alt="purple_logo">
-  <h1>Documentation coming soon</h1>
+  <h1>Inetsim setup</h1>
   <p>This will be the page for the setup docs</p>
+  <p>To setup inetsim on the server run the folowing commands</p>
+  <p>sudo su</p>
+  <p>echo "deb http://www.inetsim.org/debian/ binary/" > /etc/apt/sources.list.d/inetsim.list</p>
+  <p>wget -O - http://www.inetsim.org/inetsim-archive-signing-key.asc | apt-key add -</p>
+  <p>apt update</p>
+  <p>apt install inetsim</p>
+  <p></p>
+  <p>Edit the config file in /etc/inetsim/inetsim.conf</p>
+  <p></p>
+  <p>cp /etc/inetsim/inetsim.conf analysis</p>
+  <p>sudo cp -r /var/lib/inetsim analysis/data</p>
+  <p>sudo chmod -R 777 data</p>
+  <p></p>
+  <p>make sure to stop inetsim and disable it from startup:</p>
+  <p>sudo systemctl stop inetsim</p>
+  <p>sudo systemctl disable inetsim</p>
 </body>
 </html>
