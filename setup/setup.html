@@ -1,101 +1,142 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Coming soon</title>
+  <title>Coming Soon</title>
   <style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #ebe8e8;
-    padding-left: 210px;
-    margin: 0;
-  }
-  img {
-    width: 500px;
-    margin: 20px;
-  }
-  h1 {
-    color: #6c5ce7;
-  }
-  footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    background-color: #f0f0f0;
-    padding: 10px;
-    text-align: center;
-    color: #666;
-  }
-
-  pre {
-  font-size: 18px;
-  }
-
-  .sidebar {
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ebe8e8;
+      margin: 0;
+      display: flex;
+    }
+    img {
+      width: 500px;
+      margin: 20px;
+      display: block;
+    }
+    h1 {
+      color: #6c5ce7;
+      margin-top: 0;
+    }
+    footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background-color: #f0f0f0;
+      padding: 10px;
+      text-align: center;
+      color: #666;
+    }
+    .sidebar {
       background-color: #737f8f;
       width: 200px;
       padding: 20px;
-      height: 100%;
+      height: 100vh;
       box-sizing: border-box;
-      overflow-x: hidden;
+      overflow-y: auto;
       position: fixed;
       top: 0;
       left: 0;
-      overflow-y: auto;
-  }
-
-  .sidebar-button {
+    }
+    .sidebar-button {
       display: block;
       width: 100%;
       padding: 10px;
       margin-bottom: 10px;
       background-color: #506784;
-      color: #ffffff; /* Text color */
+      color: #ffffff;
       border: none;
       text-align: left;
       text-decoration: none;
       font-size: 16px;
-  }
-
-  .content {
-      margin-left: 200px;
+      cursor: pointer;
+    }
+    .content {
+      margin-left: 220px;
       padding: 20px;
       box-sizing: border-box;
-  }
+    }
+    pre {
+      background-color: #f5f5f5;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: auto;
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .copy-button {
+      background-color: #506784;
+      color: #ffffff;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 14px;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
   </style>
-<script>
-  function loadPage(route) {
-    console.log("Navigating to: " + route);
-    window.location.href = "/" + route;
-    return false;
-  }
-</script>
-<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <script>
+    function loadPage(route) {
+      console.log("Navigating to: " + route);
+      window.location.href = "/" + route;
+      return false;
+    }
+
+    function copyToClipboard(elementId) {
+      const text = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Copied to clipboard: " + text);
+      }, (err) => {
+        console.error("Failed to copy: ", err);
+      });
+    }
+  </script>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>
 <body>
   <div class="sidebar">
     <button type="button" class="sidebar-button" onclick="loadPage('')">Home</button>
-    <button type="button" class="sidebar-button" onclick="loadPage('server-setup')">Server setup</button>
-    <button type="button" class="sidebar-button" onclick="loadPage('client-setup')">Client setup</button>
-    <button type="button" class="sidebar-button" onclick="loadPage('useage')">Useage</button>
+    <button type="button" class="sidebar-button" onclick="loadPage('server-setup')">Server Setup</button>
+    <button type="button" class="sidebar-button" onclick="loadPage('client-setup')">Client Setup</button>
+    <button type="button" class="sidebar-button" onclick="loadPage('usage')">Usage</button>
   </div>
-  <img src="purple_text_logo_NB.png" alt="purple_logo">
-  <h1>Inetsim setup</h1>
-  <p>This will be the page for the setup docs</p>
-  <p>To setup inetsim on the server run the folowing commands</p>
-  <p>sudo su</p>
-  <p>echo "deb http://www.inetsim.org/debian/ binary/" > /etc/apt/sources.list.d/inetsim.list</p>
-  <p>wget -O - http://www.inetsim.org/inetsim-archive-signing-key.asc | apt-key add -</p>
-  <p>apt update</p>
-  <p>apt install inetsim</p>
-  <p></p>
-  <p>Edit the config file in /etc/inetsim/inetsim.conf</p>
-  <p></p>
-  <p>cp /etc/inetsim/inetsim.conf analysis</p>
-  <p>sudo cp -r /var/lib/inetsim analysis/data</p>
-  <p>sudo chmod -R 777 data</p>
-  <p></p>
-  <p>make sure to stop inetsim and disable it from startup:</p>
-  <p>sudo systemctl stop inetsim</p>
-  <p>sudo systemctl disable inetsim</p>
+  <div class="content">
+    <img src="purple_text_logo_NB.png" alt="purple_logo">
+    <h1>Inetsim Setup</h1>
+    <p>This will be the page for the setup docs.</p>
+    <p>To setup Inetsim on the server, run the following commands:</p>
+    <div style="position: relative;">
+      <pre id="server-setup">
+sudo su
+echo "deb http://www.inetsim.org/debian/ binary/" > /etc/apt/sources.list.d/inetsim.list
+wget -O - http://www.inetsim.org/inetsim-archive-signing-key.asc | apt-key add -
+apt update
+apt install inetsim
+      </pre>
+      <button class="copy-button" onclick="copyToClipboard('server-setup')">Copy</button>
+    </div>
+    <p>Edit the config file in <code>/etc/inetsim/inetsim.conf</code>:</p>
+    <div style="position: relative;">
+      <pre id="edit-config">
+cp /etc/inetsim/inetsim.conf analysis
+sudo cp -r /var/lib/inetsim analysis/data
+sudo chmod -R 777 data
+      </pre>
+      <button class="copy-button" onclick="copyToClipboard('edit-config')">Copy</button>
+    </div>
+    <p>Make sure to stop Inetsim and disable it from startup:</p>
+    <div style="position: relative;">
+      <pre id="disable-startup">
+sudo systemctl stop inetsim
+sudo systemctl disable inetsim
+      </pre>
+      <button class="copy-button" onclick="copyToClipboard('disable-startup')">Copy</button>
+    </div>
+  </div>
 </body>
 </html>
