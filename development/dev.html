@@ -162,7 +162,7 @@ Connected successfully to: 127.0.0.1 on port: 65432
   <p>This command is used to send a file to a specified client for analysis, it has 4 options:</p>
   <p>ID -- String -- ID of the client to anlyse the file (Picks at random if left blank) Example: "Unstable Lama"</p>
   <p>Analysis time -- Int -- The time in minutes to anlyse the file for (Defaults to 2) Example: 2</p>
-  <p>Game version -- String -- The version of minecraft to run the file (Currently only forge 1.8.9 is supported) Example: "Forge, 1.8.9"</p>
+  <p>Game version -- String -- The version of minecraft to run the file (Currently only forge 1.8.9 is supported) Example: "Forge: 1.8.9"</p>
   <p>File name -- String -- The name of the file to be sent for analysis</p>
   <br/>
   <p>Once the inital command has been sent the frontend must send the file, below is some example code to do this:</p>
@@ -185,7 +185,7 @@ def start_client(host='127.0.0.1', port=65432):
                 break
             
             if command.startswith("start_analysis"):
-                options = ["Unstable Lama", "2", "Forge, 1.8.9", "test.jar"]  # Example options
+                options = ["Unstable Lama", "2", "Forge: 1.8.9", "test.jar"]  # Example options
                 options_str = ', '.join(options)
                 command_str = f"{command} [{options_str}]"
                 client.sendall(command_str.encode('utf-8'))
