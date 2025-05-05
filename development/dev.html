@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Development guide: Backend</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ebe8e8;
+      margin: 0;
+      display: flex;
+    }
+    img {
+      width: 500px;
+      margin: 20px;
+      display: block;
+    }
+    h1 {
+      color: #6c5ce7;
+      margin-top: 0;
+    }
+    footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background-color: #f0f0f0;
+      padding: 10px;
+      text-align: center;
+      color: #666;
+    }
+    .sidebar {
+      background-color: #737f8f;
+      width: 200px;
+      padding: 20px;
+      height: 100vh;
+      box-sizing: border-box;
+      overflow-y: auto;
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+    .sidebar-button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #506784;
+      color: #ffffff;
+      border: none;
+      text-align: left;
+      text-decoration: none;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .content {
+      margin-left: 220px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    pre {
+      background-color: #f5f5f5;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: auto;
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .copy-button {
+      background-color: #506784;
+      color: #ffffff;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 14px;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+  </style>
+  <script>
+    function loadPage(route) {
+      console.log("Navigating to: " + route);
+      window.location.href = "/" + route;
+      return false;
+    }
+
+    function copyToClipboard(elementId) {
+      const text = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Copied to clipboard: " + text);
+      }, (err) => {
+        console.error("Failed to copy: ", err);
+      });
+    }
+  </script>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+</head>
+<body>
+  <div class="sidebar">
+    <button type="button" class="sidebar-button" onclick="loadPage('')">Home</button>
+    <button type="button" class="sidebar-button" onclick="loadPage('server-setup')">Server Setup</button>
+    <button type="button" class="sidebar-button" onclick="loadPage('client-setup')">Client Setup</button>
+    <button type="button" class="sidebar-button" onclick="loadPage('usage')">Usage</button>
+  </div>
+  <div class="content">
+    <img src="purple_text_logo_NB.png" alt="purple_logo">
+    <h1>Connecting to the backend</h1>
+    <p>The backend communicates with the frontend over a socket connection. The IP and port to use are found in the config.yml.</p>
+    <p>By default it uses localhost and port 65432</p>
+    <p>An example for connecting to the backend is below:</p>
+    <div style="position: relative;">
+      <pre id="server-setup">
+import socket
+
+def start_client(host="127.0.0.1", port=65432):
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.connect((host, port))
+    print(f"Connected to server at {host}:{port}. Type messages and press Enter to send. Type 'exit' to quit.")
+    try:
+        while True:
+            message = input("> ")
+            if message.lower() == "exit":
+                print("Closing connection.")
+                break
+            client.sendall(message.encode("utf-8"))
+            response = client.recv(4096).decode("utf-8")
+            print(response)
+    except KeyboardInterrupt:
+        print("\nClosing connection.")
+    finally:
+        client.close()
+
+start_client()
+    </pre>
+    <button class="copy-button" onclick="copyToClipboard('server-setup')">Copy</button>
+   </div>
+  <p>Using the above code you can manually type out commands:</p>
+  <div style="position: relative;">
+    <pre id="edit-config">
+Connected to server at 127.0.0.1:65432. Type messages and press Enter to send. Type 'exit' to quit.
+> test_connection
+Connected successfully to: 127.0.0.1 on port: 65432
+    </pre>
+    <button class="copy-button" onclick="copyToClipboard('edit-config')">Copy</button>
+  </div>
+
+  <h1>Command structure</h1>
+  <p>Commands are sent as text over the socket connection. Each command is folowed by a list of options seperated by commas.</p>
+  <p>The format is as follows: <i>command [Option1, Option2, Option3, etc]</i>. Even if no options are used the brackets MUST be included: <i>command []</i>.</p>
+  <p>When a command is sent the backend will always do one of three things. Either return a comfimration response, return and error or return some data.</p>
+
+  <h1>Current commands</h1>
+  <p>As the project is currently indevelopment the commands are not yet complete. However here is a list of current commands:</p>
+  <p>test_connection [] -- Returns a success message with the IP and port used by the backend.</p>
+  <p>start_analysis ["ID", Analysis time (Minutes), "Game version", "File name"] -- Used to send a file to analysis, a file must be sent afterwards (Example code below).</p>
+  <p>get_all_clients [] -- Returns all currently registered clients as a string list. Example: "["Unstable Lama", "Laughing Lion"]" .</p>
+
+  <h1>start_analysis</h1>
+  <p>This command is used to send a file to a specified client for analysis, it has 4 options:</p>
+  <p>ID -- String -- ID of the client to anlyse the file (Picks at random if left blank) Example: "Unstable Lama"</p>
+  <p>Analysis time -- Int -- The time in minutes to anlyse the file for (Defaults to 2) Example: 2</p>
+  <p>Game version -- String -- The version of minecraft to run the file (Currently only forge 1.8.9 is supported) Example: "Forge, 1.8.9"</p>
+  <p>File name -- String -- The name of the file to be sent for analysis</p>
+  <br/>
+  <p>Once the inital command has been sent the frontend must send the file, below is some example code to do this:</p>
+
+  <div style="position: relative;">
+    <pre id="edit-config">
+import socket
+import os
+
+def start_client(host='127.0.0.1', port=65432):
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.connect((host, port))
+    print(f"Connected to server at {host}:{port}.")
+    
+    try:
+        while True:
+            command = input("Enter command (or 'exit' to quit): ")
+            if command.lower() == 'exit':
+                print("Closing connection.")
+                break
+            
+            if command.startswith("start_analysis"):
+                options = ["Unstable Lama", "2", "Forge, 1.8.9", "test.jar"]  # Example options
+                options_str = ', '.join(options)
+                command_str = f"{command} [{options_str}]"
+                client.sendall(command_str.encode('utf-8'))
+
+                file_path = 'test.jar'
+                if os.path.exists(file_path):
+                    file_size = os.path.getsize(file_path)
+                    client.sendall(file_size.to_bytes(8, byteorder='big'))
+
+                    with open(file_path, 'rb') as f:
+                        while True:
+                            chunk = f.read(4096)
+                            if not chunk:
+                                break
+                            client.sendall(chunk)
+                    print(f"File '{file_path}' sent successfully.")
+                    response = client.recv(4096).decode("utf-8")
+                    print(response)
+                else:
+                    print(f"File '{file_path}' does not exist.")
+            else:
+                print("Invalid command. Please use 'start_analysis' or 'exit'.")
+                
+    except KeyboardInterrupt:
+        print("\nClosing connection.")
+    finally:
+        client.close()
+
+start_client()
+
+    </pre>
+    <button class="copy-button" onclick="copyToClipboard('edit-config')">Copy</button>
+  </div>
+  <p>Note: At the moment this script will crash if an int is sent, thats why the time is a string, this will be fixed later.</p>
+</body>
+</html>
